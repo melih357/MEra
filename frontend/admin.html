@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MEra Admin Panel</title>
+  <link rel="stylesheet" href="admin.css?v=44" />
+</head>
+<body>
+  <main class="admin-shell">
+    <section id="loginView" class="panel auth-panel">
+      <div class="brand">MEra</div>
+      <h1 data-i18n="adminPanel">Admin Paneli</h1>
+      <p class="muted" data-i18n="loginIntro">Sistemi yönetmek için admin hesabıyla giriş yap.</p>
+      <label data-i18n="email">E-posta</label>
+      <input id="loginEmail" value="admin@mera.com" autocomplete="email" />
+      <label data-i18n="password">Şifre</label>
+      <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Admin şifresi" />
+      <button id="btnLogin" class="primary" data-i18n="login">Giriş Yap</button>
+      <p class="hint" data-i18n="defaultPassHint">İlk kurulum varsayılan şifresi: Admin123!@#. Girişten sonra hemen değiştir.</p>
+      <div class="language-row"><span class="muted" data-i18n="language">Dil</span><select id="adminLang"><option value="tr">Türkçe</option><option value="en">English</option></select></div>
+      <div id="loginMsg" class="msg"></div>
+    </section>
+
+    <section id="appView" class="hidden">
+      <aside class="sidebar">
+        <div class="brand">MEra Admin</div>
+        <select id="adminLangApp" class="lang-select"><option value="tr">Türkçe</option><option value="en">English</option></select>
+        <button class="nav active" data-page="dashboard" data-i18n="dashboard">Dashboard</button>
+        <button class="nav" data-page="users" data-i18n="users">Kullanıcılar</button>
+        <button class="nav" data-page="reports" data-i18n="reports">Raporlar</button>
+        <button class="nav" data-page="badges" data-i18n="badgeRequests">Rozet Talepleri</button>
+        <button class="nav" data-page="content" data-i18n="contentReview">İçerik Takibi</button>
+        <button class="nav" data-page="logs" data-i18n="badwordLogs">Küfür Logları</button>
+        <button class="nav" data-page="info" data-i18n="info">Bilgilendirme</button>
+        <button class="nav" data-page="security" data-i18n="security">Şifre Ayarı</button>
+        <a id="backToSite" class="nav link" href="index.html?fromAdmin=1" data-i18n="backToSite">Siteye Dön</a>
+        <button id="btnLogout" class="nav danger" data-i18n="logout">Çıkış</button>
+      </aside>
+
+      <section class="content">
+        <header class="topline">
+          <div>
+            <h1 id="pageTitle">Dashboard</h1>
+            <p id="pageSub" class="muted">Genel sistem durumu</p>
+          </div>
+          <div class="admin-self-box"><input id="adminSelfName" placeholder="Admin görünen adı"/><button id="btnAdminSelfName">Adımı Değiştir</button><div id="adminEmail" class="badge"></div></div>
+        </header>
+
+        <div id="passwordWarning" class="warning hidden"></div>
+
+        <section id="pageDashboard" class="page">
+          <div id="statsGrid" class="stats-grid"></div>
+        </section>
+
+        <section id="pageUsers" class="page hidden">
+          <div class="toolbar">
+            <input id="userSearch" placeholder="Ad, e-posta veya okul ara" />
+            <button id="btnUserSearch" data-i18n="search">Ara</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th data-i18n="user">Kullanıcı</th><th data-i18n="school">Okul</th><th data-i18n="status">Durum</th><th data-i18n="action">İşlem</th></tr></thead>
+              <tbody id="usersBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="pageBadges" class="page hidden">
+          <div class="toolbar">
+            <select id="badgeStatus"><option value="pending">Bekleyen Talepler</option><option value="approved">Onaylananlar</option><option value="rejected">Reddedilenler</option><option value="all">Tümü</option></select>
+            <button id="btnBadgesReload" data-i18n="refresh">Yenile</button>
+          </div>
+          <p class="muted">Kullanıcıların profilinden gönderdiği rozet taleplerini buradan inceleyip onaylayabilir veya reddedebilirsin.</p>
+          <div id="badgeRequestsList" class="cards"></div>
+        </section>
+
+        <section id="pageReports" class="page hidden">
+          <div class="toolbar">
+            <select id="reportStatus"><option value="open" data-i18n="openReports">Açık raporlar</option><option value="closed" data-i18n="closedReports">Kapalı raporlar</option><option value="deleted" data-i18n="deletedReports">Silinen şikayetler</option></select>
+            <button id="btnReportsReload" data-i18n="refresh">Yenile</button>
+          </div>
+          <div id="reportsList" class="cards"></div>
+        </section>
+
+        <section id="pageContent" class="page hidden">
+          <div class="toolbar">
+            <select id="contentType"><option value="gossip" data-i18n="gossipPosts">Dedikodular</option><option value="legacy" data-i18n="legacyMessages">Eski Toprak</option><option value="polls" data-i18n="polls">Anketler</option></select>
+            <button id="btnContentReload" data-i18n="refresh">Yenile</button>
+          </div>
+          <p class="muted" data-i18n="contentDesc">Dedikodu, Eski Toprak mesajları ve anketleri buradan takip edebilirsin.</p>
+          <div id="contentList" class="cards"></div>
+        </section>
+
+        <section id="pageLogs" class="page hidden">
+          <p class="muted" data-i18n="logsDesc">Sistemin otomatik sansürlediği son 200 kayıt. Tekrarlayan kullanımda admine bildirim gider.</p>
+          <div class="panel slim badword-manager">
+            <h2 data-i18n="badwordListTitle">Yasaklı kelime listesi</h2>
+            <p class="muted" data-i18n="badwordListDesc">Sistemdeki argo/yasaklı kelimeleri buradan görüntüleyebilir ve yeni kelime ekleyebilirsin.</p>
+            <div class="toolbar">
+              <input id="badwordSearch" placeholder="Listede ara" />
+              <input id="badwordNew" placeholder="Yeni kelime ekle" />
+              <button id="btnBadwordAdd" class="primary" data-i18n="addWord">Ekle</button>
+            </div>
+            <div id="badwordMsg" class="msg"></div>
+            <div id="badwordCount" class="muted small"></div>
+            <div id="badwordList" class="word-list"></div>
+          </div>
+          <div id="logsList" class="cards"></div>
+        </section>
+
+        <section id="pageInfo" class="page hidden">
+          <div class="cards">
+            <div class="card"><h2 data-i18n="infoTitle">Admin Bilgilendirme</h2><p class="muted" data-i18n="infoIntro">Bu bölüm paneldeki ceza ve moderasyon terimlerini sade şekilde açıklar.</p></div>
+            <div class="card"><h3>Mute</h3><p data-i18n="infoMute">Mute, kullanıcının belirli süre mesaj/gönderi gibi etkileşimleri yapmasının engellenmesidir. Hesap silinmez, süre bitince tekrar kullanabilir.</p></div>
+            <div class="card"><h3>Ban</h3><p data-i18n="infoBan">Ban, kullanıcının uygulamaya erişiminin kapatılmasıdır. Ağır veya tekrarlayan ihlallerde kullanılmalıdır.</p></div>
+            <div class="card"><h3 data-i18n="infoReportTitle">Rapor / Şikayet</h3><p data-i18n="infoReport">Açık rapor admin tarafından incelenmemiştir. Problem çözüldü olarak işaretlenince rapor kapanır ve ilgili öğrencilere bildirim gider.</p></div>
+            <div class="card"><h3 data-i18n="infoBadwordTitle">Argo / Yasaklı Kelime</h3><p data-i18n="infoBadword">Kullanıcı argo kelime yazarsa metin otomatik sansürlenir ve kullanıcıya uyarı bildirimi gider. Tekrar ederse admin paneline bildirim düşer; admin mute, ban veya sadece takip kararı verebilir.</p></div>
+          </div>
+        </section>
+
+        <section id="pageSecurity" class="page hidden">
+          <div class="panel slim">
+            <h2 data-i18n="securityTitle">Admin Şifre Ayarı</h2>
+            <p class="muted" data-i18n="securityDesc">Admin şifresinin kaç ayda bir yenilenmesi gerektiğini seç. 1, 3 veya 6 ay seçilebilir.</p>
+            <div id="securityStatus" class="status-box"></div>
+            <label data-i18n="interval">Şifre yenileme süresi</label>
+            <select id="intervalMonths">
+              <option value="1" data-i18n="oneMonth">Her 1 ay</option>
+              <option value="3" data-i18n="threeMonths">Her 3 ay</option>
+              <option value="6" data-i18n="sixMonths">Her 6 ay</option>
+            </select>
+            <label data-i18n="adminCallSetting">Admin arama durumu</label>
+            <select id="adminCallAllowedSelect">
+              <option value="1" data-i18n="adminCallAllowedOn">Aranabilir</option>
+              <option value="0" data-i18n="adminCallAllowedOff">Aranamaz</option>
+            </select>
+            <p class="muted small" data-i18n="adminCallDesc">Aranamaz seçilirse kullanıcılar admin hesabına sesli/görüntülü arama başlatamaz.</p>
+            <label data-i18n="adminDmMuteSetting">Admin DM sessiz durumu</label>
+            <select id="adminDmMutedAllSelect">
+              <option value="0" data-i18n="adminDmMuteOff">DM bildirimleri açık</option>
+              <option value="1" data-i18n="adminDmMuteOn">Tüm kullanıcılar sessizde</option>
+            </select>
+            <p class="muted small" data-i18n="adminDmMuteDesc">Açılırsa kullanıcıların admin hesabına gönderdiği DM mesajları bildirim düşürmez.</p>
+            <label data-i18n="currentPassword">Mevcut şifre</label>
+            <input id="currentPassword" type="password" autocomplete="current-password" />
+            <label data-i18n="newPassword">Yeni şifre</label>
+            <input id="newPassword" type="password" autocomplete="new-password" placeholder="Boş bırakırsan sadece süre değişir" />
+            <label data-i18n="newPasswordAgain">Yeni şifre tekrar</label>
+            <input id="newPassword2" type="password" autocomplete="new-password" />
+            <button id="btnSaveSecurity" class="primary" data-i18n="save">Kaydet</button>
+            <div id="securityMsg" class="msg"></div>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+    <div id="tempAdminModal" class="modalBackdrop hidden" aria-hidden="true">
+      <div class="tempAdminModal">
+        <div class="tempAdminHead">
+          <div>
+            <h2>Geçici Admin Süresi</h2>
+            <p class="muted">Kullanıcıya ne kadar süre adminlik verileceğini seç.</p>
+          </div>
+          <button id="btnTempAdminClose" class="iconBtn" type="button">×</button>
+        </div>
+        <div class="tempAdminControls">
+          <button id="btnTempAdminMinus" type="button">−</button>
+          <input id="tempAdminAmount" type="number" min="1" max="365" value="1" />
+          <button id="btnTempAdminPlus" type="button">+</button>
+          <select id="tempAdminUnit">
+            <option value="60">Saat</option>
+            <option value="1440">Gün</option>
+            <option value="10080">Hafta</option>
+            <option value="1">Dakika</option>
+          </select>
+        </div>
+        <div class="tempAdminQuick">
+          <button type="button" data-temp-preset="60">1 saat</button>
+          <button type="button" data-temp-preset="1440">1 gün</button>
+          <button type="button" data-temp-preset="2880">2 gün</button>
+          <button type="button" data-temp-preset="10080">1 hafta</button>
+        </div>
+        <div id="tempAdminPreview" class="tempAdminPreview">1 saat</div>
+        <div class="tempAdminActions">
+          <button id="btnTempAdminCancel" type="button">Vazgeç</button>
+          <button id="btnTempAdminConfirm" class="primary" type="button">Onayla</button>
+        </div>
+      </div>
+    </div>
+
+  <script src="admin.js?v=44"></script>
+</body>
+</html>

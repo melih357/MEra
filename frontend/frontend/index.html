@@ -1,0 +1,1405 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>MEra</title>
+  <link rel="stylesheet" href="styles.css?v=44"/>
+  <style>.langSwitch{display:flex;gap:6px;align-items:center;padding:4px;border:1px solid rgba(148,163,184,.16);border-radius:999px;background:#fff}.langSwitch .btn{padding:8px 12px;border-radius:999px;border:none;background:transparent}.langSwitch .btn.active{background:linear-gradient(135deg,#eff6ff,#f5f3ff);box-shadow:0 6px 18px rgba(96,165,250,.14);color:#1e3a8a;font-weight:800}</style>
+</head>
+<body>
+  <div class="container">
+    <div id="topbar" class="topbar hidden">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn" id="btnMenu" aria-label="Menü">☰ Menü</button>
+        <div class="brand">MEra</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div class="langSwitch">
+          <button class="btn" id="btnLangTR">TR</button>
+          <button class="btn" id="btnLangEN">EN</button>
+        </div>
+        <button class="badge userProfilePill hidden" id="meBadge" type="button" title="Profilime git" aria-label="Profilime git"></button>
+        <button class="btn hidden" id="btnAdminPortal">Admin Paneli</button>
+        <span class="adminCountdownPill hidden" id="adminCountdownPill"></span>
+        <button class="btn danger" id="btnLogout">Çıkış</button>
+      </div>
+    </div>
+
+    <div id="drawerOverlay" class="drawerOverlay hidden"></div>
+    <aside id="drawer" class="drawer simpleDrawer hidden" aria-label="MEra menü">
+      <div class="drawerHeader simpleDrawerHeader">
+        <div>
+          <div class="drawerBrand">MEra</div>
+          <div class="simpleMenuSubtitle" data-i18n="welcome">Welcome to MEra.</div>
+        </div>
+        <button class="btn simpleCloseBtn" id="btnCloseDrawer" aria-label="Kapat">✕</button>
+      </div>
+
+      <nav class="simpleMenuList" aria-label="Ana menü">
+        <button type="button" class="drawerItem simpleMenuItem" id="btnHome" data-view="dashboard"><span class="simpleMenuIcon">🏠</span><span><strong class="js-label">Ana Sayfa</strong><small>Özet, hızlı kartlar ve akış</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnDirectory" data-view="directory"><span class="simpleMenuIcon">🎓</span><span><strong class="js-label">Öğrenci Rehberi</strong><small>Mezunları ve profilleri keşfet</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnMyProfile" data-view="profile"><span class="simpleMenuIcon">👤</span><span><strong class="js-label">Profilim</strong><small>Fotoğraf, bilgi ve anılarım</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnPet" data-view="pet"><span class="simpleMenuIcon">🐣</span><span><strong class="js-label">Avatarlar</strong><small>Kendi veya ortak avatarını büyüt</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnLegacy" data-view="legacy"><span class="simpleMenuIcon">💬</span><span><strong class="js-label">Topluluk</strong><small>Sohbet, anket ve gündem</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnGossip" data-view="gossip"><span class="simpleMenuIcon">🔥</span><span><strong class="js-label">Dedikodu</strong><small>Anonim ve trend paylaşımlar</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnDM" data-view="dm"><span class="simpleMenuIcon">✉️</span><span><strong class="js-label">Mesajlar</strong><small>Özel sohbetler ve gruplar</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnMeet" data-view="meet"><span class="simpleMenuIcon">🤝</span><span><strong class="js-label">MEra Meet</strong><small>Buluşma ve bağlantı alanı</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnNova" data-view="nova"><span class="simpleMenuIcon">⚡</span><span><strong class="js-label">MEra Nova</strong><small>Keşif ve yeni akışlar</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnScene" data-view="scene"><span class="simpleMenuIcon">🎬</span><span><strong class="js-label">MEra Scene</strong><small>İçerik ve sahne paylaşımları</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnStyle" data-view="style"><span class="simpleMenuIcon">✨</span><span><strong class="js-label">MEra Style</strong><small>Kombinler ve fırsatlar</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnBlast" data-view="blast"><span class="simpleMenuIcon">🧩</span><span><strong class="js-label">MEra Blast</strong><small>Mini oyun, okul ve Türkiye sıralaması</small></span></button>
+        <button type="button" class="drawerItem simpleMenuItem" id="btnAbout" data-view="about"><span class="simpleMenuIcon">🧭</span><span><strong class="js-label">Hakkında</strong><small>MEra fikri ve manifesto</small></span></button>
+      </nav>
+
+      <div class="drawerFooter muted small simpleDrawerFooter" data-i18n="welcome">Welcome to MEra.</div>
+    </aside>
+
+    <div id="authView" class="card authShell">
+      <div class="authHero">
+        <div class="authVisualBackdrop">
+          <span class="authGlow authGlowA"></span>
+          <span class="authGlow authGlowB"></span>
+          <span class="authGlow authGlowC"></span>
+          <div class="authOrbitalRing authOrbitalRingA"></div>
+          <div class="authOrbitalRing authOrbitalRingB"></div>
+          <div class="authParticleField" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="authEyebrow" data-i18n="authEyebrow">WELCOME TO MERA</div>
+        <div class="authKicker" data-i18n="authKicker">YENİ NESİL MEZUNİYET AĞI</div>
+        <div class="authDisplay">
+          <span data-i18n="authLine1">Bir dönem</span><br/>
+          <span data-i18n="authLine2">biter.</span><br/>
+          <span class="authDisplayAccent" data-i18n="authLine3">Bir çağ başlar.</span>
+        </div>
+        <p class="authLead muted" id="authHeroLead" data-i18n="authHeroLead">MEra’da vedalar, anılar ve bağlar sadece saklanmaz. Güçlenir.</p>
+        <div class="authFeatureList">
+          <span class="authChip" data-i18n="authChipIdentity">🐺 Güçlü kimlik</span>
+          <span class="authChip" data-i18n="authChipModern">✨ Modern deneyim</span>
+          <span class="authChip" data-i18n="authChipNetwork">🎓 Mezun ağı</span>
+          <span class="authChip" data-i18n="authChipSecurity">🛡️ Güvenli başlangıç</span>
+        </div>
+        <div class="authHeroStats">
+          <article class="authFloatCard authFloatCardMain cardHoverLift">
+            <small data-i18n="authStatCardTitle">İlk izlenim</small>
+            <strong data-i18n="authStatCardBody">Sade değil, sinematik bir giriş.</strong>
+            <p data-i18n="authStatCardHint">Hareketli ışık katmanları ve güçlü tipografiyle açılış anı daha etkileyici.</p>
+          </article>
+          <div class="authMetricRail">
+            <div class="authMetricChip"><b data-i18n="authMetric1Value">24/7</b><span data-i18n="authMetric1Label">kalıcı oturum</span></div>
+            <div class="authMetricChip"><b data-i18n="authMetric2Value">Any</b><span data-i18n="authMetric2Label">geçerli e-posta alan adı</span></div>
+            <div class="authMetricChip"><b data-i18n="authMetric3Value">+10</b><span data-i18n="authMetric3Label">güçlü şifre standardı</span></div>
+          </div>
+        </div>
+        <div class="authUnderline"></div>
+      </div>
+
+      <div class="authPanel">
+        <div class="authPanelGlow"></div>
+        <h2 data-i18n="authTitle">MEra • Giriş / Kayıt</h2>
+        <div class="authSub muted" id="authIntro" data-i18n="authIntro">Giriş yapınca hesabın kalıcı olur. Çıkış yapmadıkça tekrar giriş istemez.</div>
+
+        <div class="authTools">
+          <div class="langSwitch authLangSwitch">
+            <button class="btn" id="btnLangTRAuth">TR</button>
+            <button class="btn" id="btnLangENAuth">EN</button>
+          </div>
+          <div class="authMiniNote" data-i18n="authAnyDomainNote">Her geçerli e-posta alan adı desteklenir.</div>
+        </div>
+
+        <div class="tabs authTabs">
+          <div class="tab active" id="tabLogin" data-i18n="login">Giriş</div>
+          <div class="tab" id="tabRegister" data-i18n="register">Kayıt</div>
+        </div>
+
+        <div id="loginPanel" class="authFormPanel">
+          <div class="authFormGrid">
+            <div class="authField">
+              <label class="small muted fieldLabel" data-i18n="email">E-posta</label>
+              <div class="inputWrap">
+                <span class="inputIcon">✉</span>
+                <input class="input" id="loginEmail" autocomplete="email" data-i18n-placeholder="authEmailPlaceholder" placeholder="ornek@outlook.com"/>
+              </div>
+              <div class="authInputHint" data-i18n="authLoginHint">Gmail şart değil; geçerli herhangi bir e-posta ile giriş yapabilirsin.</div>
+            </div>
+            <div class="authField">
+              <label class="small muted fieldLabel" data-i18n="password">Şifre</label>
+              <div class="inputWrap">
+                <span class="inputIcon">🔒</span>
+                <input class="input" id="loginPass" type="password" autocomplete="current-password" data-i18n-placeholder="password" placeholder="••••••••"/>
+                <button class="authToggleBtn" type="button" data-toggle-password="loginPass" data-i18n="showPassword">Göster</button>
+              </div>
+              <div class="authInputHint" id="capsLockHint"></div>
+            </div>
+          </div>
+          <div class="authActions">
+            <button class="btn primary" id="btnLogin" data-i18n="loginBtn">Giriş Yap</button>
+            <button class="btn ghost" id="btnForgot" data-i18n="forgot">Şifremi Unuttum</button>
+          </div>
+          <span class="muted authStatus" id="authMsg"></span>
+        </div>
+
+        <div id="registerPanel" class="hidden authFormPanel">
+          <div class="authFormGrid">
+            <div class="authField">
+              <label class="small muted fieldLabel" data-i18n="fullName">Ad Soyad</label>
+              <div class="inputWrap">
+                <span class="inputIcon">👤</span>
+                <input class="input" id="regName" autocomplete="name" data-i18n-placeholder="fullName"/>
+              </div>
+            </div>
+            <div class="authField">
+              <label class="small muted fieldLabel" data-i18n="email">E-posta</label>
+              <div class="inputWrap">
+                <span class="inputIcon">✉</span>
+                <input class="input" id="regEmail" autocomplete="email" data-i18n-placeholder="authEmailPlaceholder" placeholder="ornek@outlook.com"/>
+              </div>
+              <div class="authInputHint" data-i18n="authEmailAnyHint">@gmail zorunlu değil. Outlook, Hotmail, okul veya kurumsal adresler kullanılabilir.</div>
+            </div>
+            <div class="authField">
+              <label class="small muted fieldLabel" data-i18n="password">Şifre</label>
+              <div class="inputWrap">
+                <span class="inputIcon">🔐</span>
+                <input class="input" id="regPass" type="password" autocomplete="new-password" data-i18n-placeholder="password"/>
+                <button class="authToggleBtn" type="button" data-toggle-password="regPass" data-i18n="showPassword">Göster</button>
+              </div>
+            </div>
+            <div class="authField">
+              <label class="small muted fieldLabel" data-i18n="confirmPassword">Şifre Tekrar</label>
+              <div class="inputWrap">
+                <span class="inputIcon">✅</span>
+                <input class="input" id="regPassConfirm" type="password" autocomplete="new-password" data-i18n-placeholder="confirmPassword"/>
+                <button class="authToggleBtn" type="button" data-toggle-password="regPassConfirm" data-i18n="showPassword">Göster</button>
+              </div>
+            </div>
+            <div class="authField">
+              <label class="small muted fieldLabel" data-i18n="school">Okul</label>
+              <div class="inputWrap">
+                <span class="inputIcon">🏫</span>
+                <input class="input" id="regSchool" autocomplete="organization" data-i18n-placeholder="authSchoolPlaceholder" placeholder="Örn: Kartal Anadolu Lisesi"/>
+              </div>
+              <div class="authInputHint" data-i18n="authSchoolHint">Sadece “lise”, “kolej”, “ortaokul”, “üniversite” gibi genel türler kabul edilmez; okulun tam adını yaz.</div>
+            </div>
+            <div class="authField">
+              <label class="small muted fieldLabel" data-i18n="classLabel">Sınıf / Şube</label>
+              <div class="inputWrap">
+                <span class="inputIcon">🏷️</span>
+                <input class="input" id="regClass" data-i18n-placeholder="classPlaceholder" placeholder="Örn: 12A"/>
+              </div>
+            </div>
+            <div class="authField">
+              <label class="small muted fieldLabel" data-i18n="gradYear">Mezuniyet Yılı (1995 - bu yıl)</label>
+              <div class="inputWrap">
+                <span class="inputIcon">🎓</span>
+                <input class="input" id="regYear" inputmode="numeric" data-i18n-placeholder="gradYearExample" placeholder="örn: 2026"/>
+              </div>
+            </div>
+          </div>
+          <div class="authSecurityCard">
+            <div class="authSecurityHead">
+              <div>
+                <div class="authSecurityEyebrow" data-i18n="authSecurityEyebrow">Şifre Güvenliği</div>
+                <h3 data-i18n="authSecurityTitle">Kolay şifreler artık engelleniyor</h3>
+              </div>
+              <span class="authStrengthBadge" id="regStrengthLabel" data-i18n="passwordStrengthWaiting">Kontrol bekleniyor</span>
+            </div>
+            <div class="authStrengthBar"><span id="regStrengthBar"></span></div>
+            <div class="authRuleGrid" id="regPasswordRules">
+              <div class="authRule" data-rule="length" data-i18n="passwordRuleLength">En az 10 karakter</div>
+              <div class="authRule" data-rule="case" data-i18n="passwordRuleCase">Büyük + küçük harf</div>
+              <div class="authRule" data-rule="number" data-i18n="passwordRuleNumber">En az 1 rakam</div>
+              <div class="authRule" data-rule="special" data-i18n="passwordRuleSpecial">En az 1 özel karakter</div>
+              <div class="authRule" data-rule="match" data-i18n="passwordRuleMatch">İki şifre aynı olmalı</div>
+              <div class="authRule" data-rule="common" data-i18n="passwordRuleCommon">Çok kolay veya tahmin edilir olmamalı</div>
+            </div>
+          </div>
+          <div class="authActions">
+            <button class="btn primary" id="btnRegister" data-i18n="registerBtn">Kayıt Ol</button>
+          </div>
+          <span class="muted authStatus" id="regMsg"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="appView" class="hidden">
+      <div class="grid">
+        <div class="card hidden" id="dashboardCard">
+          <div class="dashboardShell">
+            <div class="dashboardHero cardHoverLift" id="dashboardHero">
+              <div class="dashboardHeroMain">
+                <div class="dashboardHeroAvatar" id="dashboardHeroAvatar"></div>
+                <div>
+                  <div class="dashboardEyebrow" data-i18n="homeEyebrow">MEra ana alanı</div>
+                  <h2 id="dashboardGreeting" data-i18n="homeGreetingFallback">Hoş geldin.</h2>
+                  <p class="muted" id="dashboardStatusText" data-i18n="homeStatusFallback">Bugün burada neler oluyor, tek bakışta gör.</p>
+                  <div class="dashboardHeroMeta" id="dashboardHeroMeta"></div>
+                </div>
+              </div>
+              <div class="dashboardHeroStats" id="dashboardHeroStats">
+                <div class="dashboardHeroStat"><span data-i18n="homeMiniStreak">Seri</span><b id="homeStatStreak">0</b></div>
+                <div class="dashboardHeroStat pulseBadge"><span data-i18n="homeMiniAlerts">Yeni</span><b id="homeStatAlerts">0</b></div>
+                <div class="dashboardHeroStat"><span data-i18n="homeMiniOrbit">Orbit</span><b id="homeStatOrbit">0</b></div>
+              </div>
+            </div>
+
+            <div class="dashboardGrid">
+              <div class="dashboardColumn dashboardColumnMain">
+                <section class="dashboardPanel cardHoverLift" id="dashboardAgendaPanel">
+                  <div class="dashboardPanelHead">
+                    <div>
+                      <div class="dashboardPanelEyebrow" data-i18n="homeAgendaEyebrow">Günün akışı</div>
+                      <h3 data-i18n="homeAgendaTitle">Gündem kartı</h3>
+                    </div>
+                    <span class="miniBadge glowDot" id="dashboardAgendaBadge">LIVE</span>
+                  </div>
+                  <div id="dashboardAgenda"></div>
+                </section>
+
+                <section class="dashboardPanel cardHoverLift" id="dashboardQuickPanel">
+                  <div class="dashboardPanelHead">
+                    <div>
+                      <div class="dashboardPanelEyebrow" data-i18n="homeQuickEyebrow">Hızlı geçiş</div>
+                      <h3 data-i18n="homeQuickTitle">Premium kısayollar</h3>
+                    </div>
+                  </div>
+                  <div class="dashboardQuickGrid" id="dashboardQuickLinks"></div>
+                </section>
+
+                <section class="dashboardPanel cardHoverLift dashboardDealPanel" id="dashboardDealsPanel">
+                  <div class="dashboardPanelHead">
+                    <div>
+                      <div class="dashboardPanelEyebrow" data-i18n="homeDealsEyebrow">En iyi indirimler</div>
+                      <h3 data-i18n="homeDealsTitle">Fiyatına oranla en iyi 5 ürün</h3>
+                    </div>
+                  </div>
+                  <div id="dashboardBestDeals"></div>
+                </section>
+
+                <section class="dashboardPanel cardHoverLift" id="dashboardSuggestPanel">
+                  <div class="dashboardPanelHead">
+                    <div>
+                      <div class="dashboardPanelEyebrow" data-i18n="homeSuggestEyebrow">Sana uygun</div>
+                      <h3 data-i18n="homeSuggestTitle">Akıllı öneriler</h3>
+                    </div>
+                  </div>
+                  <div id="dashboardSuggestions"></div>
+                </section>
+              </div>
+
+              <div class="dashboardColumn dashboardColumnSide">
+                <section class="dashboardPanel cardHoverLift dashboardNotificationsPanel" id="dashboardNotificationsPanel">
+                  <div class="dashboardPanelHead">
+                    <div>
+                      <div class="dashboardPanelEyebrow">Bildirimler</div>
+                      <h3>Gelen ve önceki bildirimler</h3>
+                    </div>
+                    <button class="btn tiny" id="btnMarkNotificationsRead">Tümünü okundu yap</button>
+                  </div>
+                  <div id="dashboardNotificationsList"><p class="muted">Bildirimler yükleniyor...</p></div>
+                </section>
+
+                <section class="dashboardPanel cardHoverLift" id="dashboardFeedPanel">
+                  <div class="dashboardPanelHead">
+                    <div>
+                      <div class="dashboardPanelEyebrow" data-i18n="homeFeedEyebrow">Arkadaşlarında neler oluyor?</div>
+                      <h3 data-i18n="homeFeedTitle">Canlı akış</h3>
+                    </div>
+                  </div>
+                  <div id="dashboardFeed"></div>
+                </section>
+
+                <section class="dashboardPanel cardHoverLift dashboardStyleTopPanel" id="dashboardStyleTopPanel">
+                  <div class="dashboardPanelHead">
+                    <div>
+                      <div class="dashboardPanelEyebrow" data-i18n="homeStyleTopEyebrow">Style sıralaması</div>
+                      <h3 data-i18n="homeStyleTopTitle">Günün / ayın / yılın kombinleri</h3>
+                    </div>
+                  </div>
+                  <div id="dashboardTopOutfits"></div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="directoryCard">
+          <h2 data-i18n="directoryTitle">Öğrenciler</h2>
+          <div class="stats" style="margin-top:10px">
+            <div class="stat"><div class="muted small" data-i18n="totalStudents">Toplam Öğrenci</div><div id="statUsers" style="font-size:20px;font-weight:900">-</div></div>
+            <div class="stat"><div class="muted small" data-i18n="totalFarewells">Toplam Veda</div><div id="statFarewells" style="font-size:20px;font-weight:900">-</div></div>
+            <div class="stat"><div class="muted small" data-i18n="topMessaged">En Çok Mesaj Alan</div><div id="statTop" style="font-size:16px;font-weight:900">-</div></div>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <div>
+              <input class="input" id="search" placeholder="İsim veya e-posta ara..."/>
+            </div>
+            <div class="row" style="grid-template-columns:1fr 1fr">
+              <input class="input" id="filterSchool" placeholder="Okul filtresi"/>
+              <select id="filterYear" class="input">
+                <option value="">Mezuniyet (hepsi)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="userList" id="userList"></div>
+          <div class="muted" id="appMsg" style="margin-top:10px"></div>
+        </div>
+
+        <div class="card" id="profileCard">
+          <h2 data-i18n="selectedProfileTitle">Seçili Profil</h2>
+          <p class="muted" data-i18n="selectedProfileHint">Bir öğrenci seçince profil burada açılır.</p>
+        </div>
+
+        <div class="card hidden" id="profilePage">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+            <button class="btn" id="btnBack" data-i18n="backArrow">← Geri</button>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span class="badge" id="viewsBadge">👁 0</span>
+              <button class="btn" id="btnViewers"><span data-i18n="whoViewed">Kim baktı?</span> <span class="small muted" data-i18n="viewersPrivate">🔒 Sadece sen görürsün</span></button>
+            </div>
+          </div>
+          <div id="profileHeader" style="margin-top:10px"></div>
+
+          <div class="tabs" id="profileTabs">
+            <div class="tab active" id="tabProfile" data-i18n="profileTab">Profil</div>
+            <div class="tab" id="tabInbox" data-i18n="inboxTab">Gelen Vedalar</div>
+            <div class="tab" id="tabFarewells" data-i18n="farewellsTab">Vedalar</div>
+            <div class="tab" id="tabSent" data-i18n="sentTab">Gönderdiğim</div>
+          </div>
+
+          <div id="panelProfile" style="margin-top:10px"></div>
+          <div id="panelInbox" class="hidden" style="margin-top:10px"></div>
+          <div id="panelFarewells" class="hidden" style="margin-top:10px"></div>
+          <div id="panelSent" class="hidden" style="margin-top:10px"></div>
+        </div>
+
+        <div class="card hidden petCard" id="petCard">
+          <div class="petHeroClean">
+            <div>
+              <div class="dashboardPanelEyebrow">MEra Avatar</div>
+              <h2>Avatarlarım</h2>
+              <p class="muted">Bir tane kendi avatarını büyüt; takip ettiğin arkadaşının avatarıyla arkadaş yap, barıştır, sev ve zamanla civcivden tavuğa dönüştür.</p>
+            </div>
+            <button class="btn" id="btnBackPet">← Geri</button>
+          </div>
+
+          <div class="petCleanGrid">
+            <section class="petLeftStack">
+              <div class="profileSection petCreateBox" id="petCreatePanel">
+                <div class="profileSectionTitle">Kendi Avatarını Oluştur</div>
+                <div class="petCreateLine">
+                  <div class="profileField"><label class="small muted">Avatar adı</label><input class="input" id="petNameInput" maxlength="40" placeholder="Örn: Pofuduk"/></div>
+                  <div class="profileField"><label class="small muted">Renk</label><select class="input" id="petColorSelect"><option value="violet">Mor</option><option value="blue">Mavi</option><option value="green">Yeşil</option><option value="rose">Pembe</option><option value="amber">Sarı</option></select></div>
+                  <button class="btn primary" id="btnCreatePet">Avatarı Oluştur</button>
+                </div>
+                <span class="muted" id="petMsg"></span>
+                <input type="hidden" id="petTypeSelect" value="solo"/><select class="hidden" id="petPartnerSelect"><option value=""></option></select>
+              </div>
+
+              <div class="petToolbar"><button class="btn" id="btnRefreshPets">Yenile</button><span class="muted small">Bir kullanıcı yalnızca 1 kendi avatarına sahip olur. Arkadaşlık sistemi ayrı çalışır.</span></div>
+              <div id="petList" class="petSoloArea"><div class="muted">Avatar yükleniyor...</div></div>
+              <div id="petFriendships" class="petFriendshipArea"></div>
+            </section>
+
+            <aside class="petSidePanel petSidePanelClean">
+              <div class="petSideMascot">🐣</div>
+              <h3>Avatar Bahçesi</h3>
+              <p>Civciv büyüdükçe piliç, tavuk ve yumurtalı aile haline gelir. Sevgi ve bakım XP kazandırır.</p>
+              <div class="petFriendMaker">
+                <b>Arkadaş yap</b>
+                <span class="muted small">Takip ettiğin birinin avatarını seç; ara sıra tartışırlarsa iki arkadaş beraber barıştırır.</span>
+                <select class="input" id="petFriendSelect"><option value="">Arkadaş avatarı seç</option></select>
+                <button class="btn primary" id="btnMakePetFriend">Arkadaş Yap</button>
+                <span class="muted small" id="petFriendMsg"></span>
+              </div>
+              <div class="petFarmSummaryBox"><b>Çiftlik özeti</b><div id="petFarmStatsBox" class="petFarmStats"><div><b>-</b><span>Toplam canlı</span></div><div><b>-</b><span>Yumurta</span></div></div></div>
+              <div class="petMiniQuest"><b>Bugünün mini görevleri</b><span>🍽️ 1 kez besle</span><span>🤲 Avatarını sev</span><span>🥚 Yumurtaları kontrol et</span><span>🩹 Özel civciv varsa nazik davran</span></div>
+              <div class="petTipBox"><b>Avatar yaşı</b><span id="petAgeClockHint">Avatar takvimi: 1 gerçek saat = 1 avatar günü, 12 avatar günü = 1 ay, 12 ay = 1 yaş.</span></div>
+              <div class="petTipBox"><b>Çiftlik mantığı</b><span>Tavuk büyüyünce küçülmez. Yumurtaları severek çatlatırsın; çıkan yeni civcivler kendi özellikleriyle çiftliğe eklenir.</span></div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="card hidden" id="legacyCard">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+            <h2 style="margin:0" data-i18n="legacyTitle">Eski Toprak</h2>
+            <button class="btn" id="btnBackLegacy" data-i18n="backStudents">← Öğrenciler</button>
+          </div>
+          <p class="muted" data-i18n="legacyDesc">Mezunlardan yardım ve tavsiye alabileceğin sohbet + anket alanı.</p>
+
+          <div class="card" style="padding:10px">
+            <div class="muted small" data-i18n="chatLabel">Sohbet</div>
+            <div id="legacyChat"></div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <input class="input" id="legacyInput" data-i18n-placeholder="legacyInput" placeholder="Mesaj yaz... (Enter)"/>
+              <button class="btn primary" id="btnLegacySend" data-i18n="send">Gönder</button>
+            </div>
+            <div class="muted" id="legacyMsg" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card" style="padding:10px;margin-top:10px">
+            <div class="muted small" data-i18n="openPoll">Anket Aç</div>
+            <input class="input" id="pollQ" data-i18n-placeholder="pollQuestion" placeholder="Anket sorusu"/>
+            <div class="row" style="margin-top:8px">
+              <input class="input" id="pollO1" data-i18n-placeholder="option1" placeholder="Seçenek 1"/>
+              <input class="input" id="pollO2" data-i18n-placeholder="option2" placeholder="Seçenek 2"/>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <input class="input" id="pollO3" data-i18n-placeholder="option3" placeholder="Seçenek 3 (opsiyonel)"/>
+              <input class="input" id="pollO4" data-i18n-placeholder="option4" placeholder="Seçenek 4 (opsiyonel)"/>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:10px;align-items:center">
+              <button class="btn primary" id="btnCreatePoll" data-i18n="publishPoll">Anketi Yayınla</button>
+              <span class="muted" id="pollMsg"></span>
+            </div>
+          </div>
+
+          <div class="card" style="padding:10px;margin-top:10px">
+            <div class="muted small" data-i18n="pollsTitle">Anketler</div>
+            <div id="pollList"></div>
+          </div>
+        </div>
+
+
+        <div class="card hidden" id="meetCard">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+            <h2 style="margin:0" data-i18n="meetTitle">MEra Orbit</h2>
+            <button class="btn" id="btnBackMeet" data-i18n="backStudents">← Öğrenciler</button>
+          </div>
+          <p class="muted" data-i18n="meetDesc">Kahve planı kur, halı saha ekibini tamamla ve ilgini çeken ilanları kaydet.</p>
+
+          <div class="profileTabsMini" id="meetTabs">
+            <button class="profileMiniTab active" id="tabMeetCoffee" data-i18n="meetCoffee">☕ Kahve</button>
+            <button class="profileMiniTab" id="tabMeetPitch" data-i18n="meetPitch">⚽ Halı Saha</button>
+          </div>
+
+          <div class="meetGrid">
+            <div class="profileSection">
+              <div class="profileSectionTitle" data-i18n="meetCreateTitle">Yeni ilan oluştur</div>
+              <div class="profileFormGrid">
+                <div class="profileField"><label class="small muted" data-i18n="meetListingTitle">Başlık</label><input class="input" id="meetTitleInput" data-i18n-placeholder="meetListingTitlePh" placeholder="Örn: Kadıköy kahve planı"/></div>
+                <div class="profileField"><label class="small muted" data-i18n="meetProvince">İl</label><input class="input" id="meetProvinceInput" data-i18n-placeholder="meetProvincePh" placeholder="Örn: İstanbul"/></div>
+                <div class="profileField"><label class="small muted" data-i18n="meetDistrict">İlçe / Semt</label><input class="input" id="meetDistrictInput" data-i18n-placeholder="meetDistrictPh" placeholder="Örn: Kadıköy"/></div>
+                <div class="profileField">
+                  <label class="small muted" data-i18n="meetDateLabel">Tarih</label>
+                  <div class="meetDateRow">
+                    <input class="input" id="meetDateInput" type="datetime-local"/>
+                    <button class="btn" id="btnConfirmMeetDate" type="button" data-i18n="meetConfirmDate">Tarihi Onayla</button>
+                  </div>
+                  <div class="small muted meetDatePreview" id="meetDatePreview" data-i18n="meetDateNotConfirmed">Tarih seçildiğinde burada görünecek.</div>
+                </div>
+                <div class="profileField"><label class="small muted" data-i18n="meetGender">Katılımcı cinsiyeti</label><select class="input" id="meetGenderInput"><option value="any" data-i18n="meetGenderAny">Farketmez</option><option value="female" data-i18n="meetGenderFemale">Kadın</option><option value="male" data-i18n="meetGenderMale">Erkek</option><option value="mixed" data-i18n="meetGenderMixed">Karma</option></select></div>
+                <div class="profileField"><label class="small muted" data-i18n="meetAge">Ortalama yaş</label><input class="input" id="meetAgeInput" type="number" min="10" max="99" data-i18n-placeholder="meetAgePh" placeholder="Örn: 20"/></div>
+                <div class="profileField"><label class="small muted" data-i18n="meetDuration">İlan süresi</label><div class="meetDurationRow"><input class="input" id="meetDurationValue" type="number" min="1" max="30" value="3"/><select class="input" id="meetDurationUnit"><option value="days" data-i18n="meetDurationDays">Gün</option><option value="hours" data-i18n="meetDurationHours">Saat</option></select></div><div class="small muted" data-i18n="meetDurationHint">İlan bu sürenin sonunda otomatik kapanır.</div></div>
+                <div class="profileField"><label class="small muted" data-i18n="meetPhoto">İlan fotoğrafı</label><input class="input" id="meetPhotoInput" type="file" accept="image/*"/><div class="small muted" style="margin-top:6px" data-i18n="meetPhotoHint">İstersen profil fotoğrafından farklı bir fotoğraf ekleyebilirsin.</div></div>
+                <div class="profileField" id="meetNeedWrap"><label class="small muted" data-i18n="meetNeedCount">Gereken kişi</label><input class="input" id="meetNeedInput" type="number" min="1" max="30" data-i18n-placeholder="meetNeedCountPh" placeholder="Kaç kişi eksik?"/></div>
+                <div class="profileField profileFieldWide"><label class="small muted" data-i18n="meetNote">Not</label><textarea class="input" id="meetNoteInput" data-i18n-placeholder="meetNotePh" placeholder="Saat, semt veya detay yazabilirsin"></textarea></div>
+              </div>
+              <div class="profileInlineActions">
+                <button class="btn primary" id="btnCreateMeetup" data-i18n="meetPublish">İlanı Yayınla</button>
+                <button class="btn hidden" id="btnCancelMeetEdit" type="button" data-i18n="cancel">Vazgeç</button>
+                <span class="muted" id="meetMsg"></span>
+              </div>
+            </div>
+
+            <div class="profileSection">
+              <div class="profileSectionTitle" data-i18n="meetOpenListings">Açık ilanlar</div>
+              <div class="profileTabsMini meetModeTabs">
+                <button class="profileMiniTab active" id="tabMeetOpen" data-i18n="meetOpen">Açık İlanlar</button>
+                <button class="profileMiniTab" id="tabMeetSaved" data-i18n="meetSaved">Kaydettiklerim</button>
+              </div>
+              <div class="profileInlineActions" style="justify-content:flex-start">
+                <input class="input meetFilterInput" id="meetFilterProvince" data-i18n-placeholder="meetFilterProvince" placeholder="İle göre filtrele"/>
+                <button class="btn" id="btnMeetRefresh" data-i18n="refresh">Yenile</button>
+              </div>
+              <div id="meetList" class="meetList"></div>
+
+              <div class="meetOwnerPanels">
+                <div class="profileSection meetPanelCard">
+                  <div class="profileSectionTitle" data-i18n="meetRequestsTitle">İstek Kutusu</div>
+                  <div class="muted small" data-i18n="meetRequestsDesc">İlanlarına gelmek isteyenleri buradan seçebilirsin.</div>
+                  <div id="meetRequestsBox" class="meetPanelList"></div>
+                </div>
+                <div class="profileSection meetPanelCard">
+                  <div class="profileSectionTitle" data-i18n="meetAcceptedTitle">Katılanlar</div>
+                  <div class="muted small" data-i18n="meetAcceptedDesc">Onayladığın kişiler burada görünür.</div>
+                  <div id="meetAttendeesBox" class="meetPanelList"></div>
+                </div>
+                <div class="profileSection meetPanelCard">
+                  <div class="profileSectionTitle" data-i18n="meetQuestionsTitle">Sorular</div>
+                  <div class="muted small" data-i18n="meetQuestionsDesc">İlan sahiplerine gelen sorular burada görünür.</div>
+                  <div id="meetQuestionsBox" class="meetPanelList"></div>
+                </div>
+                <div class="profileSection meetPanelCard">
+                  <div class="profileSectionTitle" data-i18n="meetHistoryTitle">Katıldığım Etkinlikler</div>
+                  <div class="muted small" data-i18n="meetHistoryDesc">Daha önce katıldığın etkinliklerin kısa geçmişi.</div>
+                  <div id="meetHistoryBox" class="meetPanelList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card hidden" id="novaCard">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+            <div>
+              <h2 style="margin:0" data-i18n="novaTitle">MEra Nova</h2>
+              <div class="muted small" data-i18n="novaDesc">Zaman kapsülü, dönem haritası, odalar, anı duvarı ve sınıf yıllığı tek yerde.</div>
+            </div>
+            <button class="btn" id="btnBackNova" data-i18n="backStudents">← Öğrenciler</button>
+          </div>
+
+          <div class="profileTabsMini" id="novaTabs" style="margin-top:12px">
+            <button class="profileMiniTab active" data-novatab="capsule"><span data-i18n="novaTabCapsule">⏳ Zaman Kapsülü</span></button>
+            <button class="profileMiniTab" data-novatab="map"><span data-i18n="novaTabMap">🗺️ Dönem Haritası</span></button>
+            <button class="profileMiniTab" data-novatab="rooms"><span data-i18n="novaTabRooms">🫂 Odalar</span></button>
+            <button class="profileMiniTab" data-novatab="wall"><span data-i18n="novaTabWall">🧠 Anı Duvarı</span></button>
+            <button class="profileMiniTab" data-novatab="yearbook"><span data-i18n="novaTabYearbook">📘 Yıllık</span></button>
+          </div>
+
+          <div class="novaPanel" data-novapanel="capsule">
+            <div class="novaGrid">
+              <div class="profileSection">
+                <div class="profileSectionTitle">Yeni kapsül bırak</div>
+                <div class="profileFormGrid">
+                  <div class="profileField"><label class="small muted">Başlık</label><input class="input" id="capsuleTitle" placeholder="Örn: 5 yıl sonraki bana"/></div>
+                  <div class="profileField"><label class="small muted">Açılma tarihi</label><input class="input" id="capsuleOpenAt" type="datetime-local"/></div>
+                  <div class="profileField profileFieldWide"><label class="small muted">Not</label><textarea class="input" id="capsuleBody" placeholder="Gelecekteki kendine veya dönemine bir şey bırak..." style="min-height:120px"></textarea></div>
+                </div>
+                <div class="profileInlineActions">
+                  <button class="btn primary" id="btnCreateCapsule">Kapsülü Kaydet</button>
+                  <span class="muted" id="capsuleMsg"></span>
+                </div>
+              </div>
+              <div class="profileSection">
+                <div class="profileSectionTitle">Kapsüllerim</div>
+                <div id="capsuleList" class="novaList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="novaPanel hidden" data-novapanel="map">
+            <div class="novaGrid">
+              <div class="profileSection">
+                <div class="profileSectionTitle">Dönem Haritası Filtreleri</div>
+                <div class="profileFormGrid">
+                  <div class="profileField"><label class="small muted">Okul</label><input class="input" id="mapSchool" data-i18n-placeholder="schoolNamePh" placeholder="Okul adı"/></div>
+                  <div class="profileField"><label class="small muted">Mezuniyet yılı</label><input class="input" id="mapGrad" type="number" min="1995" max="2099" data-i18n-placeholder="gradYearExample" placeholder="Örn: 2026"/></div>
+                  <div class="profileField"><label class="small muted">Şehir</label><input class="input" id="mapCity" placeholder="İstanbul"/></div>
+                  <div class="profileField"><label class="small muted">Durum</label><select class="input" id="mapStage"><option value="">Hepsi</option><option value="university">Üniversiteye geçti</option><option value="internship">Staj arıyor</option><option value="work">İşte</option><option value="circle">Aynı çevrede</option></select></div>
+                </div>
+                <div class="profileInlineActions">
+                  <button class="btn primary" id="btnLoadMap">Haritayı Getir</button>
+                  <span class="muted" id="mapMsg"></span>
+                </div>
+                <div id="mapSummary" class="novaStatRow"></div>
+              </div>
+              <div class="profileSection">
+                <div class="profileSectionTitle">Ağdaki kişiler</div>
+                <div id="mapList" class="novaList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="novaPanel hidden" data-novapanel="rooms">
+            <div class="novaGrid">
+              <div class="profileSection">
+                <div class="profileSectionTitle">Odalar</div>
+                <div class="muted small">Yazılım, staj, müzik veya aynı şehirdeki mezunlarla daha düzenli konuş.</div>
+                <div id="roomList" class="roomList" style="margin-top:12px"></div>
+              </div>
+              <div class="profileSection">
+                <div class="profileSectionTitle">Oda akışı</div>
+                <div id="roomMeta" class="muted small">Bir oda seç.</div>
+                <textarea class="input" id="roomPostInput" placeholder="Odaya kısa bir mesaj bırak..." style="margin-top:12px;min-height:100px"></textarea>
+                <div class="profileInlineActions">
+                  <button class="btn primary" id="btnSendRoomPost">Paylaş</button>
+                  <button class="btn" id="btnRoomCreateGroup" type="button">Odadan Grup Kur</button>
+                  <span class="muted" id="roomMsg"></span>
+                </div>
+                <div id="roomFeed" class="novaList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="novaPanel hidden" data-novapanel="wall">
+            <div class="novaGrid">
+              <div class="profileSection">
+                <div class="profileSectionTitle">Anı bırak</div>
+                <div class="profileFormGrid">
+                  <div class="profileField"><label class="small muted">Başlık</label><input class="input" id="wallTitle" placeholder="Örn: Mezuniyet günü"/></div>
+                  <div class="profileField"><label class="small muted">Kategori</label><select class="input" id="wallCategory"><option value="memory">Toplu fotoğraf</option><option value="event">Okul etkinliği</option><option value="joke">Sınıf içi şaka</option><option value="teacher">Öğretmen sözü</option><option value="graduation">Mezuniyet günü</option></select></div>
+                  <div class="profileField profileFieldWide"><label class="small muted">Anı</label><textarea class="input" id="wallBody" placeholder="Bunu neden hatırlamak istiyorsun?" style="min-height:120px"></textarea></div>
+                  <div class="profileField"><label class="small muted">Fotoğraf</label><input class="input" id="wallPhoto" type="file" accept="image/*"/></div>
+                </div>
+                <div class="profileInlineActions">
+                  <button class="btn primary" id="btnCreateWallPost">Anıyı Paylaş</button>
+                  <span class="muted" id="wallMsg"></span>
+                </div>
+              </div>
+              <div class="profileSection">
+                <div class="profileSectionTitle">En çok hatırlananlar</div>
+                <div id="wallList" class="novaList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="novaPanel hidden" data-novapanel="yearbook">
+            <div class="novaGrid">
+              <div class="profileSection">
+                <div class="profileSectionTitle"> <span data-i18n="yearbookTitle">Sınıf Yıllığı</span> </div>
+                <div class="profileFormGrid">
+                  <div class="profileField"><label class="small muted"><span data-i18n="schoolLabel">Okul</span></label><input class="input" id="yearbookSchool" data-i18n-placeholder="schoolNamePh" placeholder="Okul adı"/></div>
+                  <div class="profileField"><label class="small muted"><span data-i18n="gradYear">Mezuniyet yılı</span></label><input class="input" id="yearbookGrad" type="number" min="1995" max="2099" data-i18n-placeholder="gradYearExample" placeholder="Örn: 2026"/></div>
+                </div>
+                <div class="profileInlineActions">
+                  <button class="btn primary" id="btnLoadYearbook"> <span data-i18n="yearbookLoad">Yıllığı Getir</span> </button>
+                  <span class="muted" id="yearbookMsg"></span>
+                </div>
+                <div id="yearbookSummary" class="novaStatRow"></div>
+                <div class="profileSectionTitle" style="margin-top:18px"> <span data-i18n="yearbookPlaylistTitle">Dönem Playlist’i</span> </div>
+                <div class="profileFormGrid">
+                  <div class="profileField"><label class="small muted"> <span data-i18n="platform">Platform</span> </label><select class="input" id="playlistPlatform"><option value="spotify">Spotify</option><option value="youtube">YouTube</option></select></div>
+                  <div class="profileField"><label class="small muted"> <span data-i18n="songLinkLabel">Şarkı linki</span> </label><input class="input" id="playlistUrl" placeholder="https://..."/></div>
+                  <div class="profileField profileFieldWide"><label class="small muted"> <span data-i18n="shortNote">Kısa not</span> </label><input class="input" id="playlistNote" data-i18n-placeholder="yearbookSongNotePh" placeholder="Bu şarkı o dönemi neden anlatıyor?"/></div>
+                </div>
+                <div class="profileInlineActions">
+                  <button class="btn" id="btnAddPlaylist"> <span data-i18n="yearbookAddSong">Şarkı Bırak</span> </button>
+                  <span class="muted" id="playlistMsg"></span>
+                </div>
+                <div class="profileSectionTitle" style="margin-top:18px"> <span data-i18n="yearbookQuoteTitle">Dönem / Öğretmen Sözü</span> </div>
+                <div class="profileFormGrid">
+                  <div class="profileField"><label class="small muted"><span data-i18n="yearbookQuoteType">Söz türü</span></label><select class="input" id="yearbookQuoteType"><option value="period" data-i18n="yearbookQuotePeriod">Dönem sözü</option><option value="teacher" data-i18n="yearbookQuoteTeacher">Öğretmen sözü</option></select></div>
+                  <div class="profileField profileFieldWide"><label class="small muted"><span data-i18n="yearbookQuoteBody">Söz</span></label><textarea class="input" id="yearbookQuoteBody" data-i18n-placeholder="yearbookQuotePh" placeholder="Kısa ama hatırlanacak bir söz bırak" style="min-height:88px"></textarea></div>
+                </div>
+                <div class="profileInlineActions">
+                  <button class="btn" id="btnAddYearbookQuote"><span data-i18n="yearbookQuoteAdd">Sözü Bırak</span></button>
+                  <span class="muted" id="yearbookQuoteMsg"></span>
+                </div>
+              </div>
+              <div class="profileSection">
+                <div class="profileSectionTitle"> <span data-i18n="yearbookFriendsMatches">Dönem arkadaşları ve eşleşmeler</span> </div>
+                <div id="yearbookList" class="novaList"></div>
+                <div class="profileSectionTitle" style="margin-top:18px"> <span data-i18n="cityPresenceTitle">Bugün Kim Nerede?</span> </div>
+                <div id="cityPresenceList" class="novaList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card hidden" id="gossipCard">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <h2 style="margin:0" data-i18n="gossipTitle">Dedikodu</h2>
+            <button class="btn" id="btnBackGossip" data-i18n="back">Geri</button>
+          </div>
+          <p class="muted" data-i18n="gossipDesc">Öğretmenler/okullar hakkında paylaş. "Sadece Benim Okulum" seçersen, sadece aynı okuldan olanlar görür.</p>
+
+          <div class="row" style="margin-top:10px">
+            <textarea class="input" id="gossipText" data-i18n-placeholder="writeSomething" placeholder="Bir şeyler yaz..." style="min-height:90px"></textarea>
+          </div>
+          <div class="gossipTools" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px">
+            <select id="gossipVisibility" class="input" style="max-width:240px">
+              <option value="global" data-i18n="globalOpt">🌍 Genel</option>
+              <option value="school" data-i18n="schoolOnlyOpt">🏫 Sadece Benim Okulum</option>
+            </select>
+            <select id="gossipCategory" class="input" style="max-width:220px">
+              <option value="general">✨ Genel</option>
+              <option value="teacher">👩‍🏫 Öğretmen</option>
+              <option value="school">🏫 Okul gündemi</option>
+              <option value="confession">💬 İtiraf</option>
+              <option value="memory">📸 Anı</option>
+              <option value="question">❓ Soru</option>
+            </select>
+            <button class="btn primary" id="btnGossipPost" data-i18n="share">Paylaş</button>
+            <span class="muted" id="gossipMsg"></span>
+          </div>
+          <div class="gossipFilterBar">
+            <button class="btn active" data-gossip-mode="all">Hepsi</button>
+            <button class="btn" data-gossip-mode="school">Okulum</button>
+            <select id="gossipSort" class="input"><option value="new">En yeni</option><option value="popular">Popüler</option></select>
+            <select id="gossipFilterCategory" class="input"><option value="all">Tüm konular</option><option value="general">Genel</option><option value="teacher">Öğretmen</option><option value="school">Okul gündemi</option><option value="confession">İtiraf</option><option value="memory">Anı</option><option value="question">Soru</option></select>
+          </div>
+          <div class="gossipInfoGrid"><div><b>Saygılı paylaşım</b><span>Dedikodu alanı eğlence içindir; hakaret ve kişisel saldırı otomatik sansürlenir.</span></div><div><b>Okul filtresi</b><span>İstersen sadece kendi okulundaki gündemi görebilirsin.</span></div><div><b>Popüler sıralama</b><span>Yorum ve tepki alan paylaşımlar öne çıkar.</span></div></div>
+
+          <div id="gossipList" style="margin-top:12px"></div>
+        </div>
+
+
+        <div class="card hidden" id="styleCard">
+          <div class="styleShell">
+            <div class="sceneHead styleHead">
+              <div>
+                <div class="dashboardPanelEyebrow" data-i18n="styleEyebrow">Kombin • indirim • keşif</div>
+                <h2 style="margin:0" data-i18n="styleTitle">MEra Style</h2>
+                <p class="muted" data-i18n="styleDesc">Kombinini paylaş, ürün indirimi yakala, topluluğa hızlıca haber ver.</p>
+              </div>
+              <button class="btn" id="btnBackStyle" data-i18n="backStudents">← Öğrenciler</button>
+            </div>
+
+            <div class="styleHeroGrid styleHeroGridWide">
+              <section class="dashboardPanel styleHighlightPanel">
+                <div class="styleFeatureRibbon">
+                  <span class="styleFeatureChip" data-i18n="styleHeroChip1">Kombin paylaş</span>
+                  <span class="styleFeatureChip" data-i18n="styleHeroChip2">İndirim bildir</span>
+                  <span class="styleFeatureChip" data-i18n="styleHeroChip3">Ürünlerini ekle</span>
+                </div>
+                <div id="styleSummary"></div>
+              </section>
+
+              <section class="dashboardPanel styleComposerPanel">
+                <div class="dashboardPanelHead">
+                  <div>
+                    <div class="dashboardPanelEyebrow" data-i18n="styleCreateEyebrow">Yeni paylaşım</div>
+                    <h3 data-i18n="styleCreateTitle">Kombin ya da indirim bırak</h3>
+                  </div>
+                </div>
+
+                <div class="styleSegment" id="styleComposerTabs">
+                  <button class="styleSegmentBtn active" data-stylecompose="outfit" data-i18n="styleTabOutfits">Kombinler</button>
+                  <button class="styleSegmentBtn" data-stylecompose="deal" data-i18n="styleTabDeals">İndirim Alarmı</button>
+                </div>
+
+                <div class="profileFormGrid">
+                  <div class="profileField">
+                    <label class="small muted" data-i18n="stylePostType">Paylaşım tipi</label>
+                    <select class="input" id="stylePostType">
+                      <option value="outfit" data-i18n="styleTypeOutfit">Kombin</option>
+                      <option value="deal" data-i18n="styleTypeDeal">İndirim</option>
+                    </select>
+                  </div>
+                  <div class="profileField">
+                    <label class="small muted" data-i18n="styleCategory">Kategori</label>
+                    <select class="input" id="styleCategory">
+                      <option value="sneaker" data-i18n="styleCatSneaker">Sneaker</option>
+                      <option value="streetwear" data-i18n="styleCatStreetwear">Streetwear</option>
+                      <option value="makeup" data-i18n="styleCatMakeup">Makyaj</option>
+                      <option value="accessory" data-i18n="styleCatAccessory">Aksesuar</option>
+                    </select>
+                  </div>
+                  <div class="profileField profileFieldWide">
+                    <label class="small muted" data-i18n="styleTitleLabel">Başlık</label>
+                    <input class="input" id="styleTitleInput" data-i18n-placeholder="styleTitlePh" placeholder="Örn: Günlük gri-beyaz kombin"/>
+                  </div>
+                  <div class="profileField">
+                    <label class="small muted" data-i18n="styleBrandLabel">Marka / mağaza</label>
+                    <input class="input" id="styleBrandInput" data-i18n-placeholder="styleBrandPh" placeholder="Örn: Nike / Gratis"/>
+                  </div>
+                  <div class="profileField">
+                    <label class="small muted" data-i18n="stylePriceNow">Yeni fiyat</label>
+                    <input class="input" id="stylePriceNow" inputmode="decimal" placeholder="799"/>
+                  </div>
+                  <div class="profileField">
+                    <label class="small muted" data-i18n="stylePriceBefore">Eski fiyat</label>
+                    <input class="input" id="stylePriceBefore" inputmode="decimal" placeholder="1199"/>
+                  </div>
+                  <div class="profileField">
+                    <label class="small muted" data-i18n="styleLinkLabel">Link</label>
+                    <input class="input" id="styleLinkInput" placeholder="https://..."/>
+                  </div>
+                  <div class="profileField">
+                    <label class="small muted" data-i18n="styleTagsLabel">Etiketler</label>
+                    <input class="input" id="styleTagsInput" data-i18n-placeholder="styleTagsPh" placeholder="#dunk #indirim #softglam"/>
+                  </div>
+                  <div class="profileField profileFieldWide">
+                    <label class="small muted" data-i18n="styleBodyLabel">Açıklama</label>
+                    <textarea class="input" id="styleBodyInput" data-i18n-placeholder="styleBodyPh" placeholder="Parçaları, uyumu veya indirim bilgisini yaz." style="min-height:110px"></textarea>
+                  </div>
+                  <div class="profileField profileFieldWide hidden" id="styleDiscountPreviewField">
+                    <div id="styleDiscountPreview" class="styleDiscountPreview"></div>
+                  </div>
+                  <div class="profileField profileFieldWide">
+                    <div class="styleItemsHead">
+                      <label class="small muted" id="styleItemsLabel" data-i18n="styleItemsLabel">Bu kombindeki ürünler</label>
+                      <button type="button" class="btn" id="btnAddStyleItem" data-i18n="styleAddItem">+ Ürün ekle</button>
+                    </div>
+                    <div id="styleItemsList" class="styleItemsList"></div>
+                  </div>
+                  <div class="profileField profileFieldWide">
+                    <label class="small muted" data-i18n="styleImageLabel">Fotoğraf (opsiyonel)</label>
+                    <input class="input" id="styleImageInput" type="file" accept="image/*"/>
+                  </div>
+                </div>
+
+                <div class="profileInlineActions">
+                  <button class="btn primary" id="btnStylePost" data-i18n="stylePublish">Paylaş</button>
+                  <span class="muted" id="styleMsg"></span>
+                </div>
+              </section>
+
+              <section class="dashboardPanel styleAsidePanel">
+                <div class="dashboardPanelHead">
+                  <div>
+                    <div class="dashboardPanelEyebrow" data-i18n="styleDiscoverEyebrow">Keşfet</div>
+                    <h3 data-i18n="styleDiscoverTitle">Kolay filtreler ve öne çıkanlar</h3>
+                  </div>
+                </div>
+                <div class="styleGuideCard">
+                  <b data-i18n="styleGuideTitle">Burada neler yapabilirsin?</b>
+                  <p class="muted" data-i18n="styleGuideBody">Kombin bak, kaydet, beğen, ürün parçalarını gör ve indirimleri mağazaya göre filtrele.</p>
+                </div>
+                <div>
+                  <div class="small muted styleFilterTitle" data-i18n="styleStoreFilterTitle">Mağazaya göre filtrele</div>
+                  <div id="styleStoreFilters" class="styleStoreFilters"></div>
+                </div>
+                <div>
+                  <div class="small muted styleFilterTitle" data-i18n="styleCarouselTitle">Öne çıkan kartlar</div>
+                  <div id="styleCarousel" class="styleCarousel"></div>
+                </div>
+              </section>
+            </div>
+
+            <section class="dashboardPanel styleFeedPanel">
+              <div class="dashboardPanelHead styleFeedHeadWrap">
+                <div>
+                  <div class="dashboardPanelEyebrow" data-i18n="styleFeedEyebrow">Akış</div>
+                  <h3 data-i18n="styleFeedTitle">MEra Style duvarı</h3>
+                </div>
+                <div class="styleFeedControls">
+                  <div class="styleSegment" id="styleFeedTabs">
+                    <button class="styleSegmentBtn active" data-stylefilter="all" data-i18n="styleTabAll">Tümü</button>
+                    <button class="styleSegmentBtn" data-stylefilter="outfit" data-i18n="styleTabOutfits">Kombinler</button>
+                    <button class="styleSegmentBtn" data-stylefilter="deal" data-i18n="styleTabDeals">İndirim Alarmı</button>
+                    <button class="styleSegmentBtn" data-stylefilter="saved" data-i18n="styleTabSaved">Favorilerim</button>
+                  </div>
+                </div>
+              </div>
+              <div id="styleFeed"></div>
+            </section>
+          </div>
+        </div>
+
+<div class="card hidden" id="blastCard">
+          <div class="blastShell">
+            <div class="sceneHead blastHead"><div><div class="dashboardPanelEyebrow">MEra Arcade</div><h2 style="margin:0">Mini Oyunlar</h2><p class="muted">Sürükle-bırak puzzle oyunlarını oyna, puanını okul ve Türkiye sıralamasına yazdır. İki oyunda da derece mantığı aynıdır.</p></div><button class="btn" id="btnBackBlast">← Öğrenciler</button></div>
+            <div class="arcadeTabs" id="arcadeTabs"><button class="arcadeTab active" data-arcade-game="blast">🧩 MEra Blast</button><button class="arcadeTab" data-arcade-game="m2">🔢 M2 Blocks</button></div>
+            <div class="blastGrid arcadeGrid">
+              <section class="dashboardPanel blastGamePanel arcadeGamePane active" data-game-panel="blast">
+                <div class="blastScoreBar"><div><span class="small muted">Puan</span><b id="blastScore">0</b></div><div><span class="small muted">En iyi</span><b id="blastBest">0</b></div><div class="blastActions"><button class="btn primary" id="btnBlastNew">Yeni Oyun</button><button class="btn blastFinishBtn" id="btnBlastFinish">Oyunu Bitir</button></div></div>
+                <div id="blastBoard" class="blastBoard" aria-label="MEra Blast oyun tahtası"></div>
+                <div class="small muted blastHint">Parçaları sürükleyip tahtaya bırak. Dolu satır/sütunları patlat, combo yap, sıralamada yüksel.</div>
+                <div id="blastPieces" class="blastPieces"></div><div id="blastMsg" class="muted blastMessage"></div>
+              </section>
+              <section class="dashboardPanel blastGamePanel arcadeGamePane" data-game-panel="m2">
+                <div class="blastScoreBar"><div><span class="small muted">Puan</span><b id="m2Score">0</b></div><div><span class="small muted">En iyi</span><b id="m2Best">0</b></div><div class="blastActions"><button class="btn primary" id="btnM2New">Yeni Oyun</button><button class="btn blastFinishBtn" id="btnM2Finish">Oyunu Bitir</button></div></div>
+                <div id="m2Board" class="m2Board" aria-label="M2 Blocks oyun tahtası"></div>
+                <div class="small muted blastHint">Numaralı blokları tahtaya sürükle. Aynı sayılar yan yana gelince zincirleme birleşir, seviye atlar ve bonus verir.</div>
+                <div id="m2Pieces" class="m2Pieces"></div><div id="m2Msg" class="muted blastMessage"></div>
+              </section>
+              <aside class="dashboardPanel blastRankPanel arcadeRankPanel">
+                <div class="dashboardPanelHead"><div><div class="dashboardPanelEyebrow">Sıralama</div><h3 id="arcadeRankTitle">MEra Blast dereceleri</h3></div></div>
+                <div class="blastMyRank" id="blastMyRank">Sıralaman yükleniyor...</div>
+                <div class="styleSegment blastRankTabs"><button class="styleSegmentBtn active" data-blast-rank="school">Okulum</button><button class="styleSegmentBtn" data-blast-rank="global">Türkiye</button></div>
+                <div id="blastLeaderboard" class="blastLeaderboard"></div>
+              </aside>
+              <aside class="dashboardPanel arcadeInfoPanel">
+                <div class="dashboardPanelEyebrow">Oyun alanı</div>
+                <h3>Bugünün challenge’ı</h3>
+                <div class="arcadeChallenge"><b>🔥 1500+ puan</b><span>Skorunu bitir butonuyla kaydet, okul listesine gir.</span></div>
+                <div class="arcadeChallenge"><b>⚡ Combo yap</b><span>Patlama veya birleşme animasyonu ekstra bonus kazandırır.</span></div>
+                <div class="arcadeChallenge"><b>🏆 İki ayrı liste</b><span>MEra Blast ve M2 Blocks skorları ayrı ayrı tutulur.</span></div>
+              </aside>
+            </div>
+          </div>
+        </div>
+
+        <div class="card hidden" id="sceneCard">
+          <div class="sceneShell">
+            <div class="sceneHead">
+              <div>
+                <div class="dashboardPanelEyebrow" data-i18n="sceneEyebrow">Film • dizi • müzik • replik</div>
+                <h2 style="margin:0" data-i18n="sceneTitle">MEra Scene</h2>
+                <p class="muted" data-i18n="sceneDesc">Seni anlatan sahneyi, karakteri, repliği veya soundtrack’i bırak.</p>
+              </div>
+              <button class="btn" id="btnBackScene" data-i18n="backStudents">← Öğrenciler</button>
+            </div>
+
+            <div class="sceneGrid">
+              <section class="dashboardPanel sceneHeroPanel">
+                <div class="sceneThemeCard" id="sceneThemeCard"></div>
+                <div class="sceneCreateCard">
+                  <div class="dashboardPanelHead">
+                    <div>
+                      <div class="dashboardPanelEyebrow" data-i18n="sceneCreateEyebrow">Yeni bırak</div>
+                      <h3 data-i18n="sceneCreateTitle">Scene gönderisi oluştur</h3>
+                    </div>
+                  </div>
+                  <div class="profileFormGrid">
+                    <div class="profileField">
+                      <label class="small muted" data-i18n="sceneEntryType">Gönderi türü</label>
+                      <select class="input" id="sceneEntryType">
+                        <option value="scene" data-i18n="sceneTypeScene">Sahne</option>
+                        <option value="quote" data-i18n="sceneTypeQuote">Replik</option>
+                        <option value="soundtrack" data-i18n="sceneTypeSoundtrack">Soundtrack</option>
+                        <option value="character" data-i18n="sceneTypeCharacter">Karakter</option>
+                      </select>
+                    </div>
+                    <div class="profileField">
+                      <label class="small muted" data-i18n="sceneMediaKind">Tür</label>
+                      <select class="input" id="sceneMediaKind">
+                        <option value="film" data-i18n="sceneMediaFilm">Film</option>
+                        <option value="series" data-i18n="sceneMediaSeries">Dizi</option>
+                        <option value="playlist" data-i18n="sceneMediaPlaylist">Playlist</option>
+                      </select>
+                    </div>
+                    <div class="profileField">
+                      <label class="small muted" data-i18n="sceneMediaTitle">Yapım / liste adı</label>
+                      <input class="input" id="sceneMediaTitle" data-i18n-placeholder="sceneMediaTitlePh" placeholder="Örn: Interstellar"/>
+                    </div>
+                    <div class="profileField">
+                      <label class="small muted" data-i18n="sceneCharacterLabel">Karakter</label>
+                      <input class="input" id="sceneCharacterName" data-i18n-placeholder="sceneCharacterPh" placeholder="Örn: Don Draper"/>
+                    </div>
+                    <div class="profileField profileFieldWide">
+                      <label class="small muted" data-i18n="scenePostTitle">Kısa başlık</label>
+                      <input class="input" id="scenePostTitle" data-i18n-placeholder="scenePostTitlePh" placeholder="Beni anlatan sahne"/>
+                    </div>
+                    <div class="profileField profileFieldWide">
+                      <label class="small muted" data-i18n="sceneBody">Metin</label>
+                      <textarea class="input" id="sceneBody" data-i18n-placeholder="sceneBodyPh" placeholder="Bu sahne/replik/soundtrack seni neden anlatıyor?" style="min-height:110px"></textarea>
+                    </div>
+                    <div class="profileField">
+                      <label class="small muted" data-i18n="scenePlatformLabel">Platform</label>
+                      <select class="input" id="scenePlatform">
+                        <option value="" data-i18n="platform">Platform</option>
+                        <option value="spotify">Spotify</option>
+                        <option value="youtube">YouTube</option>
+                      </select>
+                    </div>
+                    <div class="profileField">
+                      <label class="small muted" data-i18n="sceneSoundtrackUrl">Link</label>
+                      <input class="input" id="sceneSoundtrackUrl" placeholder="https://..."/>
+                    </div>
+                  </div>
+                  <div class="profileInlineActions">
+                    <button class="btn primary" id="btnScenePost" data-i18n="scenePublish">Scene’e bırak</button>
+                    <span class="muted" id="sceneMsg"></span>
+                  </div>
+                </div>
+              </section>
+
+              <section class="dashboardPanel">
+                <div class="dashboardPanelHead">
+                  <div>
+                    <div class="dashboardPanelEyebrow" data-i18n="sceneSidebarEyebrow">Topluluk</div>
+                    <h3 data-i18n="sceneSidebarTitle">Bu hafta neler öne çıkıyor?</h3>
+                  </div>
+                </div>
+                <div id="sceneSidebar"></div>
+              </section>
+            </div>
+
+            <section class="dashboardPanel sceneFeedPanel">
+              <div class="dashboardPanelHead">
+                <div>
+                  <div class="dashboardPanelEyebrow" data-i18n="sceneFeedEyebrow">Akış</div>
+                  <h3 data-i18n="sceneFeedTitle">MEra Scene duvarı</h3>
+                </div>
+              </div>
+              <div id="sceneFeed"></div>
+            </section>
+          </div>
+        </div>
+
+        <div class="card hidden aboutCard" id="aboutCard">
+          <div class="aboutExperience">
+            <section class="aboutHero">
+              <div class="aboutHeroTop">
+                <div>
+                  <div class="aboutEyebrow" data-i18n="aboutTitle">MEra – Hakkında</div>
+                  <div class="aboutHeroMetaLine" data-i18n="aboutEyebrow">Manifesto • Premium deneyim • Hareket</div>
+                </div>
+                <button class="btn aboutBackBtn" id="btnBackAbout" data-i18n="backArrow">← Geri</button>
+              </div>
+
+              <div class="aboutHeroGrid">
+                <div class="aboutHeroMain">
+                  <div class="aboutBrandLockup">
+                    <div class="aboutBrandTitle">MEra</div>
+                    <div class="aboutBrandLead" data-i18n="aboutLead">Bir uygulama değil. Bir çağdır.</div>
+                  </div>
+
+                  <h2 class="aboutDisplayTitle">
+                    <span data-i18n="aboutHeroLine1">Mezuniyet burada</span>
+                    <span class="aboutDisplayAccent" id="aboutWord" data-i18n="aboutWord1">harekete</span>
+                    <span data-i18n="aboutHeroLine2">dönüşür.</span>
+                  </h2>
+
+                  <p class="aboutSummary" data-i18n="aboutSummary">MEra; vedaları, okul enerjisini, mezuniyet hafızasını ve insanları tek ekranda sadece gösteren değil hissettiren dijital alan.</p>
+
+                  <div class="aboutActionRow">
+                    <button class="btn primary" id="btnAboutManifesto" data-i18n="aboutExploreBtn">Manifestoyu keşfet</button>
+                    <button class="btn" id="btnAboutFinale" data-i18n="aboutFinaleBtn">Final satırına git</button>
+                  </div>
+
+                  <div class="aboutChipRow">
+                    <span class="aboutHeroChip" data-i18n="aboutChip1">Sürünün parçası</span>
+                    <span class="aboutHeroChip" data-i18n="aboutChip2">Ortak hafıza</span>
+                    <span class="aboutHeroChip" data-i18n="aboutChip3">Premium kimlik</span>
+                    <span class="aboutHeroChip" data-i18n="aboutChip4">Yeni çağ enerjisi</span>
+                  </div>
+                </div>
+
+                <aside class="aboutHeroAside aboutTiltCard">
+                  <div class="aboutHeroSignal"></div>
+                  <div class="aboutStatKicker" data-i18n="aboutAsideEyebrow">MEra hissi</div>
+                  <div class="aboutStatMain" data-i18n="aboutMetricMain">Sadece bir profil değil.</div>
+                  <p class="aboutStatBody" data-i18n="aboutMetricBody">Aynı yılı, aynı okulu ve aynı duyguyu yaşayan insanları ortak bir hafızada buluşturan dijital alan.</p>
+                  <div class="aboutMiniStack">
+                    <div class="aboutMiniCard">
+                      <small data-i18n="aboutMini1Title">Anılar</small>
+                      <strong data-i18n="aboutMini1Body">saklanmaz</strong>
+                    </div>
+                    <div class="aboutMiniCard">
+                      <small data-i18n="aboutMini2Title">Bağlantılar</small>
+                      <strong data-i18n="aboutMini2Body">harekete dönüşür</strong>
+                    </div>
+                    <div class="aboutMiniCard">
+                      <small data-i18n="aboutMini3Title">Mezuniyet</small>
+                      <strong data-i18n="aboutMini3Body">yaşamaya devam eder</strong>
+                    </div>
+                  </div>
+                </aside>
+              </div>
+            </section>
+
+            <section class="aboutSection" id="aboutManifesto">
+              <div class="aboutSectionHead">
+                <div>
+                  <div class="aboutSectionEyebrow" data-i18n="aboutManifestoEyebrow">Manifesto</div>
+                  <h3 data-i18n="aboutManifestoTitle">MEra’nın kalbi burada atıyor</h3>
+                </div>
+                <p class="aboutSectionText" data-i18n="aboutManifestoBody">Bu bölüm sadece açıklama değil; markanın ruhunu, sürü hissini ve mezuniyet enerjisini gösteren sahne.</p>
+              </div>
+
+              <div class="aboutManifestoGrid">
+                <article class="aboutManifestoCard aboutTiltCard" data-about-card>
+                  <div class="aboutManifestoIndex">01</div>
+                  <div class="aboutManifestoText">
+                    <div data-i18n="about1">Her mezun bir sürünün parçasıdır.</div>
+                    <div class="aboutManifestoStrong" data-i18n="about2">Aynı dönemi paylaşanlar, aynı geleceğe yürür.</div>
+                  </div>
+                </article>
+
+                <article class="aboutManifestoCard aboutTiltCard" data-about-card>
+                  <div class="aboutManifestoIndex">02</div>
+                  <div class="aboutManifestoText">
+                    <div data-i18n="about3">Anılar burada saklanmaz.</div>
+                    <div class="aboutManifestoStrong" data-i18n="about4">Burada güçlenir.</div>
+                  </div>
+                </article>
+
+                <article class="aboutManifestoCard aboutTiltCard" data-about-card>
+                  <div class="aboutManifestoIndex">03</div>
+                  <div class="aboutManifestoText">
+                    <div data-i18n="about5">Bağlantılar burada kurulmaz.</div>
+                    <div class="aboutManifestoStrong" data-i18n="about6">Burada bir harekete dönüşür.</div>
+                  </div>
+                </article>
+
+                <article class="aboutManifestoCard aboutTiltCard" data-about-card>
+                  <div class="aboutManifestoIndex">04</div>
+                  <div class="aboutManifestoText">
+                    <div class="aboutManifestoStrong" data-i18n="about7">Bir dönem biter.</div>
+                    <div class="aboutManifestoStrong" data-i18n="about8">Bir çağ başlar.</div>
+                    <div class="aboutManifestoClosing" data-i18n="aboutFinaleTag">Bu senin dönemin. Bu senin çağın.</div>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="aboutSection">
+              <div class="aboutSectionHead">
+                <div>
+                  <div class="aboutSectionEyebrow" data-i18n="aboutStageEyebrow">Sahneleme</div>
+                  <h3 data-i18n="aboutStageTitle">Giren kişi açıklama değil atmosfer görmeli</h3>
+                </div>
+              </div>
+
+              <div class="aboutImpactGrid">
+                <article class="aboutImpactCard aboutTiltCard">
+                  <span class="aboutImpactBadge" data-i18n="aboutImpact1Badge">Kimlik</span>
+                  <h4 data-i18n="aboutImpact1Title">MEra ekrana ilk anda karakter verir</h4>
+                  <p data-i18n="aboutImpact1Body">Yumuşak glow, premium panel ve hareketli manifesto bloklarıyla bölüm hafızada kalır.</p>
+                </article>
+
+                <article class="aboutImpactCard aboutTiltCard">
+                  <span class="aboutImpactBadge" data-i18n="aboutImpact2Badge">Duygu</span>
+                  <h4 data-i18n="aboutImpact2Title">Sadece bilgi vermez, his bırakır</h4>
+                  <p data-i18n="aboutImpact2Body">Mezuniyet, arkadaşlık, anı ve bağ hissi ekrana katman katman yayılır.</p>
+                </article>
+
+                <article class="aboutImpactCard aboutTiltCard">
+                  <span class="aboutImpactBadge" data-i18n="aboutImpact3Badge">Vurgu</span>
+                  <h4 data-i18n="aboutImpact3Title">Her satır bir afiş gücünde görünür</h4>
+                  <p data-i18n="aboutImpact3Body">Büyük tipografi, sinematik geçiş ve aktif kart döngüsü wow etkisini büyütür.</p>
+                </article>
+              </div>
+            </section>
+
+            <section class="aboutFinale" id="aboutFinaleSection">
+              <div class="aboutFinaleInner">
+                <div class="aboutFinaleEyebrow" data-i18n="aboutFinaleEyebrow">Final</div>
+                <h3 class="aboutFinaleTitle" data-i18n="welcome">Welcome to MEra.</h3>
+                <p class="aboutFinaleBody" data-i18n="aboutFinaleBody">Bu alan; mezuniyet yıllığını, sosyal bağı ve topluluk ruhunu tek bir imzada toplar.</p>
+                <div class="aboutFinalePill">
+                  <span>MEra</span>
+                  <small data-i18n="aboutFinaleTag">Bu senin dönemin. Bu senin çağın.</small>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div class="card hidden" id="dmCard">
+          <div class="dmPremiumShell">
+            <div class="dmPremiumHead">
+              <div>
+                <h2 style="margin:0" data-i18n="dmTitle">Özel Mesajlar (DM)</h2>
+                <div class="muted small" data-i18n="dmSubtitle">Takipleştiğin kişiler, aktif durum ve daha düzenli sohbet görünümü</div>
+              </div>
+              <button class="btn" id="btnBackDM" data-i18n="back">Geri</button>
+            </div>
+
+            <div class="dmLayout">
+              <aside class="dmSidebar">
+                <div class="dmSidebarHead">
+                  <h3 style="margin:0">Sohbetler</h3>
+                  <div class="dmSidebarHeadActions">
+                    <button class="btn primary" id="btnCreateDmGroup" type="button">+ Grup</button>
+                    <span class="badge">DM</span>
+                  </div>
+                </div>
+                <div id="dmList" class="dmThreadList"></div>
+              </aside>
+              <section class="dmMain">
+                <div class="dmTopBar">
+                  <div>
+                    <h3 id="dmWith" style="margin:0" data-i18n="chooseChat">Sohbet seç</h3>
+                    <div class="dmStatusText muted small" id="dmStatusText"></div>
+                  </div>
+                  <div class="dmCallActions">
+                    <button class="btn tiny" id="btnDmMute" type="button" title="Bu sohbeti sessize al/aç">🔔 Sessize al</button>
+                    <button class="btn tiny" id="btnDmAudioCall" type="button" title="Sesli arama">📞 Sesli</button>
+                    <button class="btn tiny" id="btnDmVideoCall" type="button" title="Görüntülü konuşma">🎥 Video</button>
+                    <span class="dmTypingPill muted small" id="dmTyping" style="min-height:18px"></span>
+                  </div>
+                </div>
+                <div id="dmGroupExtras" class="dmGroupExtras hidden"></div>
+                <div class="dmToolbar">
+                  <input class="input" id="dmSearch" placeholder="DM içinde ara..."/>
+                  <button class="btn" id="btnDmClearSearch" data-i18n="clear">Temizle</button>
+                </div>
+                <div id="dmChat" class="chat dmPremiumChat"></div>
+                <div id="dmReplyBar" class="replyBar hidden"></div>
+                <div class="dmComposer cleanDmComposer">
+                  <label class="dmIconBtn dmAttachBtn" for="dmPhoto" title="Dosya ekle" aria-label="Dosya ekle"><span class="dmAttachText">📎</span></label>
+                  <input type="file" id="dmPhoto" accept="image/*"/>
+                  <input class="input" id="dmInput" placeholder="Mesaj yaz..."/>
+                  <button class="dmIconBtn" id="btnDmVoiceRecord" type="button" title="Sesli mesaj başlat / durdur" aria-label="Sesli mesaj">🎙️</button>
+                  <button class="btn primary dmSendBtn" id="btnDmSend">Gönder</button>
+                </div>
+                <div class="dmVoicePreview hidden" id="dmVoicePreview">
+                  <div class="dmVoicePreviewMeta">
+                    <span class="dmVoicePreviewLabel">🎧 Sesli mesaj hazır</span>
+                    <span class="dmVoicePreviewHint">Önce dinle, sonra Gönder'e bas</span>
+                  </div>
+                  <audio controls id="dmVoicePreviewAudio"></audio>
+                  <button class="btn tiny" id="btnDmVoiceDiscard" type="button">Kaldır</button>
+                </div>
+                <div class="dmComposerStatus muted small" id="dmMsg"></div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <div class="card hidden" id="psyCard" style="display:none !important">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <h2 style="margin:0">Psikoloğum</h2>
+            <button class="btn" id="btnBackPsy">Geri</button>
+          </div>
+          <p class="muted">Bana derdini anlat. Ben bir terapist değilim; acil durumda 112'yi ara.</p>
+          <div id="psyChat" class="chat"></div>
+          <div class="row" style="margin-top:10px;grid-template-columns:1fr auto;gap:10px">
+            <input class="input" id="psyInput" placeholder="Bir şey yaz..."/>
+            <button class="btn primary" id="btnPsySend">Gönder</button>
+          </div>
+          <span class="muted" id="psyMsg"></span>
+        </div>
+
+        <div id="adminCard" class="card hidden">
+          <div class="cardHead">
+            <button class="btn" id="btnBackAdmin">← Geri</button>
+            <div style="font-weight:900">Admin / Moderasyon</div>
+          </div>
+          <div class="tabs">
+            <button class="tab active" id="tabAdminLogs">Küfür Logları</button>
+            <button class="tab" id="tabAdminReports">Raporlar</button>
+            <button class="tab" id="tabAdminUsers">Kullanıcı</button>
+          </div>
+
+          <div id="panelAdminLogs">
+            <div class="muted small">Son 200 filtre kaydı</div>
+            <div id="adminLogsList"></div>
+          </div>
+
+          <div id="panelAdminReports" class="hidden">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select id="adminReportStatus">
+                <option value="open">Açık</option>
+                <option value="closed">Kapalı</option>
+              </select>
+              <button class="btn" id="btnAdminReloadReports">Yenile</button>
+            </div>
+            <div id="adminReportsList" style="margin-top:10px"></div>
+          </div>
+
+          <div id="panelAdminUsers" class="hidden">
+            <div class="muted small">Kullanıcı ID ile işlem</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <input id="adminUserId" placeholder="user_id" style="max-width:140px"/>
+              <button class="btn" id="btnAdminBan">Ban</button>
+              <button class="btn" id="btnAdminUnban">Unban</button>
+              <input id="adminMuteMin" placeholder="mute (dk)" style="max-width:120px"/>
+              <button class="btn" id="btnAdminMute">Mute</button>
+              <button class="btn" id="btnAdminUnmute">Unmute</button>
+              
+            </div>
+            <div id="adminUserMsg" class="msg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Viewers Modal -->
+    <div id="viewersModal" class="modalBackdrop hidden">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2 style="margin:0" data-i18n="viewersTitle">Profilime Bakanlar</h2>
+          <button class="btn" id="btnCloseViewers" data-i18n="close">Kapat</button>
+        </div>
+        <div id="viewersList" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <!-- Followers/Following Modal -->
+    <div id="followsModal" class="modalBackdrop hidden">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <h2 style="margin:0" id="followsTitle" data-i18n="following">Takip</h2>
+          <button class="btn" id="btnCloseFollows" data-i18n="close">Kapat</button>
+        </div>
+        <div id="followsList" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+
+    <!-- Photo Detail Modal -->
+    <div id="photoModal" class="modalBackdrop hidden">
+      <div class="modal photoModal">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <h2 style="margin:0" id="photoModalTitle" data-i18n="photoModalTitle">Fotoğraf</h2>
+          <button class="btn" id="btnClosePhotoModal" data-i18n="close">Kapat</button>
+        </div>
+        <div id="photoModalBody" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+
+    <div id="meetQuestionModal" class="modalBackdrop hidden">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <h2 style="margin:0" data-i18n="meetAskOwner">İlan Sahibine Soru Sor</h2>
+          <button class="btn" id="btnCloseMeetQuestion" data-i18n="close">Kapat</button>
+        </div>
+        <div class="small muted" id="meetQuestionMeta" style="margin-top:8px"></div>
+        <textarea class="input" id="meetQuestionText" data-i18n-placeholder="meetQuestionPlaceholder" placeholder="Kısa bir soru yaz" style="margin-top:10px;min-height:120px"></textarea>
+        <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn primary" id="btnSendMeetQuestion" data-i18n="send">Gönder</button>
+          <span class="muted" id="meetQuestionMsg"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="meetReviewModal" class="modalBackdrop hidden">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <h2 style="margin:0" data-i18n="meetReviewTitle">İlan Sahibine Puan Ver</h2>
+          <button class="btn" id="btnCloseMeetReview" data-i18n="close">Kapat</button>
+        </div>
+        <div class="small muted" id="meetReviewMeta" style="margin-top:8px"></div>
+        <div class="meetReviewStars" id="meetReviewStars" style="margin-top:12px">
+          <button class="btn" type="button" data-star="1">★ 1</button>
+          <button class="btn" type="button" data-star="2">★ 2</button>
+          <button class="btn" type="button" data-star="3">★ 3</button>
+          <button class="btn" type="button" data-star="4">★ 4</button>
+          <button class="btn" type="button" data-star="5">★ 5</button>
+        </div>
+        <textarea class="input" id="meetReviewText" data-i18n-placeholder="meetReviewPlaceholder" placeholder="Nasıl geçtiğini yaz" style="margin-top:10px;min-height:120px"></textarea>
+        <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn primary" id="btnSendMeetReview" data-i18n="save">Kaydet</button>
+          <span class="muted" id="meetReviewMsg"></span>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="dmGroupModal" class="modalBackdrop hidden">
+      <div class="modal dmGroupModal">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <h2 style="margin:0">Yeni Grup DM</h2>
+          <button class="btn" id="btnCloseDmGroup">Kapat</button>
+        </div>
+        <p class="muted small" style="margin-top:8px">En az 3 kişilik grup için senden başka en az 2 kişi seç.</p>
+        <div class="grid2" style="margin-top:10px;gap:10px">
+          <input class="input" id="dmGroupName" placeholder="Grup adı"/>
+          <input class="input" id="dmGroupSpotify" placeholder="Spotify / link (opsiyonel)"/>
+        </div>
+        <textarea class="input" id="dmGroupDesc" placeholder="Kısa açıklama (opsiyonel)" style="margin-top:10px;min-height:90px"></textarea>
+        <div class="dmGroupUploadRow">
+          <label class="dmAttachBtn" for="dmGroupPhoto"><span class="dmAttachText">Grup fotoğrafı seç</span></label>
+          <input type="file" id="dmGroupPhoto" accept="image/*"/>
+        </div>
+        <div class="dmGroupPickerHead">
+          <h3 style="margin:0">Üyeler</h3>
+          <input class="input" id="dmGroupSearch" placeholder="Kişi ara..."/>
+        </div>
+        <div id="dmGroupCandidates" class="dmGroupCandidates"></div>
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn primary" id="btnDmGroupSave" type="button">Grubu Oluştur</button>
+          <span class="muted" id="dmGroupMsg"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forgot Modal -->
+    <div id="forgotModal" class="modalBackdrop hidden">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2 style="margin:0" data-i18n="forgotTitle">Şifre Sıfırla</h2>
+          <button class="btn" id="btnCloseForgot" data-i18n="close">Kapat</button>
+        </div>
+        <p class="muted" data-i18n="forgotDesc">Bu demo projede e-posta doğrulama yok. Aynı e-posta için yeni şifre belirleyebilirsin.</p>
+        <div class="inputWrap">
+          <span class="inputIcon">✉</span>
+          <input class="input" id="forgotEmail" data-i18n-placeholder="authEmailPlaceholder" placeholder="ornek@outlook.com"/>
+        </div>
+        <div class="inputWrap" style="margin-top:8px">
+          <span class="inputIcon">🔐</span>
+          <input class="input" id="forgotNewPass" type="password" data-i18n-placeholder="newPassword" placeholder="Yeni şifre"/>
+          <button class="authToggleBtn" type="button" data-toggle-password="forgotNewPass" data-i18n="showPassword">Göster</button>
+        </div>
+        <div class="authInputHint" data-i18n="forgotPasswordHint" style="margin-top:8px">Yeni şifre de güçlü kurallara uymalı.</div>
+        <div style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn primary" id="btnDoReset" data-i18n="changePassword">Şifreyi Değiştir</button>
+          <span class="muted" id="forgotMsg"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=44" defer></script>
+</body>
+</html>
